@@ -1,0 +1,219 @@
+{% extends '::base_crud.html.twig' %}
+
+{% block title %}
+    {{ parent() }} - Cliente
+{% endblock %}
+
+{% block body %}
+    <!-- TOPO -->
+    <div class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom:0;">
+        <div class="navbar-inner" style="border-radius:0;">
+            <div class="container">
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-white icon-user"></i><small> usuario@usuario.com</small> <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Meu Cadastro</a></li>
+                            <li><a href="#">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="hero-unit" style="margin-bottom: 50px;">
+        <div class="container-fluid">
+            <p><h3>{{ titulo }}</h3></p>
+
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <!-- MENU -->
+            <div class="span3">
+                <ul class="nav nav-tabs nav-stacked">
+                    <li><a href="{{ path('cliente_lista') }}">Clientes <i class="icon-chevron-right pull-right"></i></a></li>
+                </ul>
+            </div>
+
+            <!-- CONTEUDO -->
+            <div class="span9">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+
+    <!-- RODAPE -->
+    <div class="row-fluid" style=" padding:20px 0 20px 0; background-color: #333; opacity: 0.9; margin-top: 20px; border-top: 7px solid #000">
+        <div class="container">
+            <div class="row-fluid">
+                <div class="span6">
+                    <h5 class="pull-left" style="color: #ffffff">Copyright ©</h5>
+                </div>
+                <div class="span6">
+                    <ul class="inline pull-right" style="padding-top: 10px">
+                        <li style="color: #ffffff"><small>home</small></li>
+                        <li style="color: #ffffff"><small>|</small></li>
+                        <li style="color: #ffffff"></small>sobre</small></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+
+    <script>
+
+        $(document).ready( function(){
+
+            // script para criar elemento e inserir em outro
+            $(document).on('click', '.add-clone', function(e){
+                // impede a criação de "#" na URL
+                e.preventDefault();
+
+                var prototype = $($(this).attr('data-origem'));    // $('.prototipo')
+                var destino = $($(this).attr('data-destino'));     // $('.clones')
+                var container = $($(this).attr('data-container')); // $('.clone')
+
+
+                if(prototype.data('index') === undefined ){
+                    prototype.data('index', $(destino).find('div'+container.selector).length );
+                }
+
+                var index = prototype.data('index');
+
+
+                // cria o elemento
+                // substitui o __name__ pelo indice
+                var elemento = prototype.attr('data-prototype').replace(/__name__/g, index);
+
+                // aumenta o índice com +1 para o próximo item
+                prototype.data('index', index + 1);
+
+                // copia o elemento para o destino
+                $(elemento).appendTo(destino);
+
+                return false;
+
+            });
+
+            // script para remover elemento
+            $(document).on("click", '.remover-elemento' ,function(e){
+                e.preventDefault();
+
+                // armazena o elemento alvo
+                var alvo = $(this).attr('data-alvo');
+                // remove o elemento se o mesmo não for o último
+                if($(alvo).length > 1){
+                    $(this).closest(alvo).remove();
+                }
+            });
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            //DEFINE MASCARAS PARA CLASSES QUANDO O DOM FOR CARREGADO
+            $('.cep').mask('00000-000');
+            $('.celular').mask('(00) 00009-0000');
+            $('.telefone').mask('(00) 0000-0000');
+            $('.cpf').mask('000.000.000-00', {reverse: true});
+            $('.rg').mask('09.009.000-Z', {translation:  {'Z': {pattern: /[A-Za-z0-9]/, optional: true }}, reverse: true}); //RG com apenas um digito
+            //$(".data").mask("00-00-0000");
+
+
+
+            // DEFINE MASCARAS PARA CLASSES QUANDO O EVENTO FOR DISPARADO (CRIADOS POSTERIORMENTE)
+            $(document).on('focus', '.cep', function(e){
+                $('.cep').mask('00000-000');
+            });
+
+           $(document).on('focus', '.celular', function(e){
+                $('.celular').mask('(00) 00009-0000');
+            });
+
+            $(document).on('focus', '.telefone', function(e){
+                $('.telefone').mask('(00) 0000-0000');
+            });
+
+
+            //BUSCA ENDEREÇO A PARTIR DO CEP
+            $(document).on('click', '.pesquisa_cep', function(e){
+
+                var cep = $(this).siblings('.cep').val();        //pega o val do cep (elemento irmão deste botão
+                var container = $($(this).closest('.endereco'));
+
+                $.ajax({
+                    type: 'GET',
+                    url: 'http://192.168.111.31/desenvolvimento/funcionarios/wsilva/xml_cep.php',
+                    data: 'cep='+cep,
+                    async: false,
+                    contentType: "application/json",
+                    dataType: 'jsonp',
+                    success: function(data){
+
+                        var retorno = $.parseJSON(data);
+
+                        container.find($('.logradouro')).val( retorno['ENDERECO']);
+                        container.find($('.bairro')).val( retorno['BAIRRO']);
+                        container.find($('.cidade')).val( retorno['MUNICIPIO']);
+                        container.find($('.estado')).val( retorno['UF']);
+                        container.find($('.numero')).focus();
+                    },
+                    error: function(erro) {
+                        console.log(erro);
+                    }
+                });
+            });
+
+            //DEFINE AS CLASSES PARA CONTATOS (QUANDO O TIPO É ALTERADO))
+            $(document).on('change', '.tipo_contato', function(e){
+                var tipo_contato = $(this).val();
+                var container = $($(this).closest('.contato'));
+
+                container.find($('.dados_contato')).attr('class', 'dados_contato span12'); //define as classes default
+                container.find($('.dados_contato')).unmask();                              //remove a mascara atual (se existir)
+                container.find($('.dados_contato')).val('');                               //limpa o valor do input
+
+                switch (tipo_contato){
+                    case 'Email':
+                        container.find($('.dados_contato')).attr('type', 'email');
+                        break;
+                    case 'Celular':
+                        container.find($('.dados_contato')).attr('type', 'text');
+                        container.find($('.dados_contato')).addClass('celular');
+                        break;
+                    case 'Telefone Residencial':
+                        container.find($('.dados_contato')).attr('type', 'text');
+                        container.find($('.dados_contato')).addClass('telefone');
+                        break;
+                    case 'Telefone Comercial':
+                        container.find($('.dados_contato')).attr('type', 'text');
+                        container.find($('.dados_contato')).addClass('telefone');
+                        break;
+                    }
+            });
+
+
+           /*
+            * MASCARAS PARA OUTRAS CLASSES
+            $('.time').mask('00:00:00');
+            $('.date_time').mask('00/00/0000 00:00:00');
+            $('.phone').mask('0000-0000');
+            $('.phone_with_ddd').mask('(00) 0000-0000');
+            $('.phone_us').mask('(000) 000-0000');
+            $('.mixed').mask('AAA 000-S0S');
+            $('.money').mask('000.000.000.000.000,00', {reverse: true});
+            */
+        });
+    </script>
+
+
+{% endblock %}

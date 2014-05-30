@@ -1,0 +1,75 @@
+{% extends 'ClienteBundle::base_cliente.html.twig' %}
+
+{% block content %}
+
+<div class="row-fluid">
+    <div class="container">
+        <legend>Dados Pessoais</legend>
+
+        <img src="{{ fotos_path(cliente.path) }}" style="width: 100px; height: 80px; border:2px solid #ededed; border-radius: 10px; margin-bottom: 10px;" >
+
+        <label>Nome</label>
+        <p class="text-info">{{ cliente.nome }}</p>
+        <label>Idade</label>
+        <p class="text-info">{{ cliente.idade }}</p>
+        <label>Sexo</label>
+        <p class="text-info">{{ cliente.sexo }}</p>
+        <br>
+
+        <legend>Endereços</legend>
+        {% if cliente.enderecos != null  %}
+            <div class="row-fuid">
+            {% for endereco in cliente.enderecos %}
+            <div class="span3" style="border-right: 1px solid #ededed">
+                <label>Logradouro</label>
+                <p class="text-info">{{endereco.logradouro }}</p>
+                <label>Número</label>
+                <p class="text-info">{{ endereco.numero }}</p>
+                <label>Bairro</label>
+                <p class="text-info">{{ endereco.bairro }}</p>
+                <label>Cidade</label>
+                <p class="text-info">{{ endereco.cidade }}</p>
+                <label>Estado</label>
+                <p class="text-info">{{ endereco.estado }}</p>
+                <label>CEP</label>
+                <p class="text-info">{{ endereco.cep }}</p>
+            </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h4>Atenção!</h4>
+                Não existe endereço cadastrado para este Cliente.Clique no botão abaixo para cadastrar um endereço.
+            </div>
+            <a href="{{ path('cliente_editar', {'id':cliente.id}) }}" class="btn btn-info" title="Editar"><i class="icon icon-white icon-pencil"></i> Editar </a>
+        {% endif %}
+
+        <legend>Contatos</legend>
+        {% if cliente.contatos != null  %}
+            <div class="row-fuid" >
+            {% for contato in cliente.contatos %}
+                <div class="span3" style="border-right: 1px solid #ededed">
+                    <label>Tipo de Contato</label>
+                    <p class="text-info">{{ contato.tipoContato }}</p>
+                    <label>Contato</label>
+                    <p class="text-info">{{ contato.contato }}</p>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <h4>Atenção!</h4>
+                Não existem contatos cadastrados para este Cliente.Clique no botão abaixo para cadastrar um contato.
+            </div>
+            <a href="{{ path('cliente_editar', {'id':cliente.id}) }}" class="btn btn-info" title="Editar"><i class="icon icon-white icon-pencil"></i> Editar </a>
+        {% endif %}
+
+
+
+    </div>
+</div>
+
+
+{% endblock %}

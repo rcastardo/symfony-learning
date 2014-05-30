@@ -1,0 +1,8 @@
+parameters:
+#    merci_catalog.example.class: Merci\CatalogBundle\Example
+
+services:
+    duosystem.crud.cliente.twig.cliente_extension:
+        class: Duosystem\Crud\ClienteBundle\Twig\ClienteExtension
+        tags:
+            - { name: twig.extension }

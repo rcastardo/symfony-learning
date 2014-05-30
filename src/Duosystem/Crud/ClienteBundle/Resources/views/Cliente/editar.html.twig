@@ -1,0 +1,206 @@
+{% extends 'ClienteBundle::base_cliente.html.twig' %}
+
+{% block content %}
+
+<div class="row-fluid">
+
+
+        <div class="form">
+
+            <form action="{{ path('cliente_editar', {'id':cliente.id})}}" method="POST" {{ form_enctype(form) }} />
+
+            {{ form_errors(form) }}
+
+            <legend>Dados Pessoais</legend>
+
+            <div class="fileupload fileupload-new" data-provides="fileupload">
+                <div class="fileupload-new thumbnail" style="width: 50px; height: 50px;"><img src="{{ fotos_path(cliente.path) }}" /></div>
+                <div class="fileupload-preview fileupload-exists thumbnail" style="width: 50px; height: 50px;"></div>
+                        <span class="btn btn-file">
+                            <span class="fileupload-new">Selecione</span>
+                            <span class="fileupload-exists">Alterar</span>
+                            {{ form_widget(form.file) }}
+                        </span>
+                <a href="#" class="btn fileupload-exists" data-dismiss="fileupload">Cancelar</a>
+            </div>
+            {{form_widget(form.nome, {'attr': {'class':'span6', 'placeholder':'Nome'} }) }}
+            <div class="row-fluid">
+                <div class="span3">
+                    {{ form_widget(form.rg, {'attr': {'class': 'span12 rg', 'placeholder':'Rg'} }) }}
+                </div>
+                <div class="span3">
+                    {{ form_widget(form.cpf, {'attr': {'class': 'span12 cpf', 'placeholder':'Cpf'} }) }}
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span3">
+                    {{ form_widget(form.data_nascimento, { 'type':'date', 'attr': {'class': 'span12 data', 'placeholder':'Data de Nascimento'} }) }}
+                </div>
+                <div class="span3">
+                    {{ form_widget(form.idade, {'attr': {'class': 'span12', 'placeholder':'Idade'} }) }}
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span3">
+                    {{ form_widget(form.sexo, {'attr': {'class': 'span12'} }) }}
+                </div>
+            </div>
+
+            <legend>Endereços</legend>
+
+            <div class="prototipo_endereco" data-prototype='
+            <div class="endereco " style="padding-top:10px; border-bottom:1px solid #ededed; margin-bottom:10px; margin-left:0;">
+
+                <div class="row-fluid">
+                    <div class="span3">
+                        <div class="input-append">
+                          {{ form_widget(form.enderecos.vars.prototype.cep, {'attr': {'class': 'span11 cep', 'placeholder':'Cep'} }) }}
+                          <button class="btn pesquisa_cep" title="Pesquisar Cep" type="button"><i class="icon-search"></i></button>
+                        </div>
+                    </div>
+                    <div class="span3">
+                    </div>
+                    <div class="span1">
+                        <button type="button" title="Remover Endereço" class="btn btn-danger btn-mini pull-left remover-elemento" data-alvo=".endereco" ><i class="icon-minus icon-white"></i></button>
+                    </div>
+                </div>
+
+
+                <div class="row-fluid">
+                    <div class="span4">
+                        {{ form_widget(form.enderecos.vars.prototype.logradouro, {'attr': {'class': 'span12 logradouro', 'placeholder':'Logradouro'} }) }}
+                    </div>
+                    <div class="span2">
+                        {{ form_widget(form.enderecos.vars.prototype.numero, {'attr': {'class': 'span12 numero', 'placeholder':'Numero'} }) }}
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3">
+                        {{ form_widget(form.enderecos.vars.prototype.complemento, {'attr': {'class': 'span12', 'placeholder':'Complemento'} }) }}
+                    </div>
+                    <div class="span3">
+                        {{ form_widget(form.enderecos.vars.prototype.bairro, {'attr': {'class': 'span12 bairro', 'placeholder':'Bairro'} }) }}
+                    </div>
+                </div>
+                <div class="row-fluid">
+                    <div class="span3">
+                        {{ form_widget(form.enderecos.vars.prototype.cidade, {'attr': {'class': 'span12 cidade', 'placeholder':'Cidade'} }) }}
+                    </div>
+                    <div class="span3">
+                        {{ form_widget(form.enderecos.vars.prototype.estado, {'attr': {'class': 'span12 estado'} }) }}
+                    </div>
+                </div>
+            </div>
+            '></div>
+
+            <div class="enderecos row-fluid">
+                {% for endereco in form.enderecos %}
+
+                    <div class="endereco " style="padding-top:10px; border-bottom:1px solid #ededed; margin-bottom:10px; margin-left:0;">
+
+                        <div class="row-fluid">
+                            <div class="span3">
+                                <div class="input-append">
+                                    {{ form_widget(endereco.cep, {'attr': {'class': 'span11 cep', 'placeholder':'Cep'} }) }}
+                                    <button class="btn pesquisa_cep" title="Pesquisar Cep" type="button"><i class="icon-search"></i></button>
+                                </div>
+                            </div>
+                            <div class="span3">
+                            </div>
+                            <div class="span1">
+                                <button type="button" title="Remover Endereço" class="btn btn-danger btn-mini pull-left remover-elemento" data-alvo=".endereco" ><i class="icon-minus icon-white"></i></button>
+                            </div>
+                        </div>
+
+
+                        <div class="row-fluid">
+                            <div class="span4">
+                                {{ form_widget(endereco.logradouro, {'attr': {'class': 'span12 logradouro', 'placeholder':'Logradouro'} }) }}
+                            </div>
+                            <div class="span2">
+                                {{ form_widget(endereco.numero, {'attr': {'class': 'span12 numero', 'placeholder':'Numero'} }) }}
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span3">
+                                {{ form_widget(endereco.complemento, {'attr': {'class': 'span12', 'placeholder':'Complemento'} }) }}
+                            </div>
+                            <div class="span3">
+                                {{ form_widget(endereco.bairro, {'attr': {'class': 'span12 bairro', 'placeholder':'Bairro'} }) }}
+                            </div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span3">
+                                {{ form_widget(endereco.cidade, {'attr': {'class': 'span12 cidade', 'placeholder':'Cidade'} }) }}
+                            </div>
+                            <div class="span3">
+                                {{ form_widget(endereco.estado, {'attr': {'class': 'span12 estado'} }) }}
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            </div>
+            <div class="row-fluid" style="margin-bottom: 10px;">
+                <button type="button" title="Adicionar Endereço" class="btn btn-info btn-mini add-clone" data-destino=".enderecos" data-origem=".prototipo_endereco" data-container=".endereco" ><i class="icon-plus icon-white"></i></button>
+            </div>
+
+
+            <legend>Contatos</legend>
+
+            <div class="prototipo_contato"  data-prototype='
+                <div class="contato" style="margin-bottom:10px; ">
+                    <div class="row-fluid">
+                        <div class="span3">
+                            {{ form_widget(form.contatos.vars.prototype.tipo_contato, {'attr': {'class': 'span12 tipo_contato'} }) }}
+                        </div>
+                        <div class="span3">
+                            {{ form_widget(form.contatos.vars.prototype.contato, {'attr': {'class': 'span12 dados_contato', 'placeholder':'Contato'} }) }}
+                        </div>
+                        <div class="span1">
+                            <button type="button" title="Remover Contato" class="btn btn-danger btn-mini pull-left remover-elemento" data-alvo=".contato" ><i class="icon-minus icon-white"></i></button>
+                        </div>
+                    </div>
+                </div>
+            ' ></div>
+
+            <div class="contatos row-fluid">
+                {% for contato in form.contatos %}
+
+                    <div class="contato" style="margin-bottom:10px; ">
+                        <div class="row-fluid">
+                            <div class="span3">
+                                {{ form_widget(contato.tipo_contato, {'attr': {'class': 'span12 tipo_contato'} }) }}
+                            </div>
+                            <div class="span3">
+                                {{ form_widget(contato.contato, {'attr': {'class': 'span12 dados_contato', 'placeholder':'Contato'} }) }}
+                            </div>
+                            <div class="span1">
+                                <button type="button" title="Remover Contato" class="btn btn-danger btn-mini pull-left remover-elemento" data-alvo=".contato" ><i class="icon-minus icon-white"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            </div>
+            <div class="row-fluid" style="margin-bottom: 10px";>
+            <button type="button" title="Adicionar Contato" class="btn btn-info btn-mini add-clone" data-destino=".contatos" data-origem=".prototipo_contato" data-container=".contato" ><i class="icon-plus icon-white"></i></button>
+        </div>
+
+    {{ form_widget(form._token) }}
+
+            <div class="row-fluid" style="margin-top: 30px">
+                <button type="submit" class="btn btn-info btn-large">Salvar</button>
+            </div>
+
+            </form>
+
+
+        </div>
+
+
+</div>
+
+
+{% endblock %}
+

@@ -1,0 +1,90 @@
+{% extends 'ClienteBundle::base_cliente.html.twig' %}
+
+{% block content %}
+    <div class="row-fluid">
+        <form class="form" action="{{ path('cliente_lista')}}" method="POST" >
+            <div class="input-append">
+
+                <input type="text" name="filtro" class="span12" placeholder="Pesquisar">
+                <button type="submit" class="btn btn-info" title="Pesquisar" ><i class="icon-white icon-search"></i> </button>
+                <a href="{{ path('cliente_cadastrar') }}" class="btn btn-info" title="Cadastrar"><i class="icon-white icon-plus"></i></a>
+            </div>
+        </form>
+
+
+
+
+
+
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Idade</th>
+                        <th>Sexo</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# table body #}
+                    {% for cliente in pagination %}
+                        <tr>
+                            <td>{{ cliente.nome }}</td>
+                            <td>{{ cliente.idade }}</td>
+                            <td>{{ cliente.sexo }}</td>
+                            <td>
+                                <a href="{{ path('cliente_detalhes', {'id':cliente.id}) }}" class="btn btn-info btn-mini" title="Detalhes"><i class="icon icon-white icon-list"></i></a>
+                                <a href="{{ path('cliente_editar', {'id':cliente.id}) }}" class="btn btn-info btn-mini" title="Editar"><i class="icon icon-white icon-pencil"></i></a>
+                                <a href="#modal" data-toggle="modal" rel="{{ path('cliente_excluir', {'id':cliente.id}) }}" class="btn btn-info btn-mini trash" title="Excluir"><i class="icon icon-white icon-trash"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    {# display navigation #}
+                    <tr>
+                        <td colspan="5">
+                            <div class="pagination-centered">{{ knp_pagination_render(pagination) }}</div>
+                        </td>
+                    </tr>
+                </tfoot>
+
+            </table>
+
+
+
+    </div>
+
+    <div id="modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 id="myModalLabel">Confirmar Exclusão</h4>
+        </div>
+        <div class="modal-body">
+            <p>Tem certeza que deseja excluir este Cliente?</p>
+        </div>
+        <div class="modal-footer">
+            <a href="" id="confirmar" class="btn btn-info">Confirmar</a>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</button>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        //passa link para a modal
+        $(".trash").click( function(){
+           var path = ($(this).attr('rel'));
+           $("#confirmar").attr('href', path);
+        });
+
+    </script>
+
+    <script>
+        //Gambiarra pra funcionar a paginação
+        var pag = $('.current').text();
+        $('.pagination').addClass('pagination-small');
+        $('.current').html('<a href="#">'+pag+'</a>');
+    </script>
+{% endblock  %}
