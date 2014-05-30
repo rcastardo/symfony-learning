@@ -45,6 +45,9 @@ Itens vistos no estudo:
   - Usuarios in DataBase
   - Usuarios em serviços externos (WebService)
 - Plugando componentes na aplicação (knpLabs)
+- Migrations
+- Fixtures
+
 
 Esses são os tópicos que eu lembrei no momento deste commit... :)
 
